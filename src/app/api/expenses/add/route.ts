@@ -11,17 +11,27 @@ export async function POST(req: Request) {
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { title, amount, category } = await req.json();
+  try {
+    const { title, amount, category } = await req.json();
 
-  await connectDB();
-  const newExpense = new Expense({
-    title,
-    amount,
-    category,
-    userId: session.user.id, // ✅ Use id, not email
-  });
+    if (!title || !amount || !category) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
 
-  await newExpense.save();
+    await connectDB();
 
-  return NextResponse.json(newExpense);
+    const newExpense = new Expense({
+      title,
+      amount,
+      category,
+      userId: session.user.id,
+    });
+
+    await newExpense.save();
+
+    return NextResponse.json(newExpense, { status: 201 });
+  } catch (error) {
+    console.error("Error adding expense:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
 }

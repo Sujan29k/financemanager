@@ -1,15 +1,33 @@
+// ExpenseForm.tsx
+
 "use client";
 
 import { useState } from "react";
 import styles from "@/styles/ExpenseForm.module.css";
 import { useRouter } from "next/navigation";
 
+const categories = [
+  "Food",
+  "Transport",
+  "Shopping",
+  "Bills",
+  "Entertainment",
+  "Other",
+];
+
 const ExpenseForm = () => {
-  const [form, setForm] = useState({ title: "", amount: "", date: "" });
+  const [form, setForm] = useState({
+    title: "",
+    amount: "",
+    date: "",
+    category: "Other",
+  });
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -26,8 +44,8 @@ const ExpenseForm = () => {
 
       if (!res.ok) throw new Error("Failed to add expense");
 
-      setForm({ title: "", amount: "", date: "" });
-      router.push("/dashboard"); // Navigate to dashboard after adding
+      setForm({ title: "", amount: "", date: "", category: "Other" });
+      router.push("/dashboard");
     } catch (err) {
       setError("Error adding expense");
     }
@@ -58,6 +76,20 @@ const ExpenseForm = () => {
         value={form.date}
         required
       />
+
+      <select
+        name="category"
+        onChange={handleChange}
+        value={form.category}
+        required
+      >
+        {categories.map((cat) => (
+          <option key={cat} value={cat}>
+            {cat}
+          </option>
+        ))}
+      </select>
+
       <button type="submit">Add</button>
       {error && <p className={styles.error}>{error}</p>}
     </form>

@@ -1,17 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { signOut } from "next-auth/react"; // Import signOut
+import { signOut } from "next-auth/react";
 import ExpenseList from "@/components/ExpenseList";
 
 interface Expense {
   _id: string;
   title: string;
   amount: number;
+  category: string;
 }
 
-export default function ViewExpensesPage() {
+export default function Dashboard() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [loading, setLoading] = useState(true);
   const [income, setIncome] = useState<number>(0);
   const [incomeInput, setIncomeInput] = useState<string>("");
@@ -23,6 +26,7 @@ export default function ViewExpensesPage() {
         if (!expenseRes.ok) throw new Error("Failed to fetch expenses");
         const expenseData = await expenseRes.json();
         setExpenses(expenseData);
+        setFilteredExpenses(expenseData);
 
         const incomeRes = await fetch("/api/income");
         if (!incomeRes.ok) throw new Error("Failed to fetch income");
@@ -38,10 +42,17 @@ export default function ViewExpensesPage() {
     fetchData();
   }, []);
 
-  const totalExpenses = expenses.reduce((acc, item) => acc + item.amount, 0);
-  const remaining = income - totalExpenses;
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    if (category === "All") {
+      setFilteredExpenses(expenses);
+    } else {
+      const filtered = expenses.filter((exp) => exp.category === category);
+      setFilteredExpenses(filtered);
+    }
+  };
 
-  async function handleIncomeSubmit(e: React.FormEvent) {
+  const handleIncomeSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const parsedIncome = Number(incomeInput);
     if (isNaN(parsedIncome) || parsedIncome < 0) {
@@ -64,10 +75,27 @@ export default function ViewExpensesPage() {
       console.error("Error updating income:", error);
       alert("There was an error updating your income");
     }
-  }
+  };
+
+  const totalExpenses = expenses.reduce((acc, item) => acc + item.amount, 0);
+  const filteredTotal = filteredExpenses.reduce(
+    (acc, item) => acc + item.amount,
+    0
+  );
+  const remaining = income - totalExpenses;
+
+  const categories = [
+    "All",
+    "Food",
+    "Transport",
+    "Shopping",
+    "Other",
+    "Entertainment",
+    "Bill",
+  ];
 
   return (
-    <div>
+    <div style={{ padding: "1rem" }}>
       {/* Logout Button */}
       <button
         onClick={() => signOut({ callbackUrl: "/login" })}
@@ -87,10 +115,12 @@ export default function ViewExpensesPage() {
       </button>
 
       <h2>Your Dashboard</h2>
+
       {loading ? (
         <p>Loading...</p>
       ) : (
         <>
+          {/* Income Form */}
           <form onSubmit={handleIncomeSubmit} style={{ marginBottom: "1rem" }}>
             <label htmlFor="income">Enter your Income: </label>
             <input
@@ -107,17 +137,51 @@ export default function ViewExpensesPage() {
             </button>
           </form>
 
+          {/* Summary (only for All) */}
+          {selectedCategory === "All" && (
+            <>
+              <p>
+                <strong>Income:</strong> ₹{income}
+              </p>
+              <p>
+                <strong>Total Expenses:</strong> ₹{totalExpenses}
+              </p>
+              <p>
+                <strong>Remaining Balance:</strong> ₹{remaining}
+              </p>
+            </>
+          )}
+
+          {/* Filter Categories */}
+          <div style={{ margin: "1rem 0" }}>
+            <strong>Filter by Category:</strong>{" "}
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => handleCategoryChange(cat)}
+                style={{
+                  margin: "0.25rem",
+                  padding: "0.25rem 0.5rem",
+                  backgroundColor:
+                    selectedCategory === cat ? "#0070f3" : "#e0e0e0",
+                  color: selectedCategory === cat ? "#fff" : "#000",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                }}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* Expense List */}
           <p>
-            <strong>Income:</strong> ₹{income}
-          </p>
-          <p>
-            <strong>Total Expenses:</strong> ₹{totalExpenses}
-          </p>
-          <p>
-            <strong>Remaining Balance:</strong> ₹{remaining}
+            <strong>Total in {selectedCategory}:</strong> ₹
+            {selectedCategory === "All" ? totalExpenses : filteredTotal}
           </p>
 
-          <ExpenseList expenses={expenses} />
+          <ExpenseList expenses={filteredExpenses} />
         </>
       )}
     </div>
