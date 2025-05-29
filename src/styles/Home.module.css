@@ -1,0 +1,26 @@
+.container {
+    text-align: center;
+    padding: 3rem;
+    font-family: Arial, sans-serif;
+  }
+  
+  .links {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+  .button {
+    background-color: #0070f3;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .button:hover {
+    background-color: #0059c1;
+  }
+  
