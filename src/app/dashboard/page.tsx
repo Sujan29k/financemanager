@@ -10,6 +10,7 @@ interface Expense {
   title: string;
   amount: number;
   category: string;
+  date?: string;
 }
 
 export default function Dashboard() {
@@ -99,6 +100,30 @@ export default function Dashboard() {
     }
   };
 
+  // Unified and corrected delete handler
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await fetch(`/api/expenses/delete?id=${id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) throw new Error("Failed to delete expense");
+
+      // Remove the deleted expense from state
+      const updatedExpenses = expenses.filter((exp) => exp._id !== id);
+      setExpenses(updatedExpenses);
+
+      setFilteredExpenses(
+        selectedCategory === "All"
+          ? updatedExpenses
+          : updatedExpenses.filter((exp) => exp.category === selectedCategory)
+      );
+    } catch (error) {
+      console.error(error);
+      alert("Failed to delete expense");
+    }
+  };
+
   const totalExpenses = expenses.reduce((acc, item) => acc + item.amount, 0);
   const filteredTotal = filteredExpenses.reduce(
     (acc, item) => acc + item.amount,
@@ -131,7 +156,6 @@ export default function Dashboard() {
         <p>Loading...</p>
       ) : (
         <>
-          {/* Income Form */}
           <form onSubmit={handleIncomeSubmit} style={{ marginBottom: "1rem" }}>
             <label htmlFor="income">Enter your Income: </label>
             <input
@@ -152,7 +176,6 @@ export default function Dashboard() {
             </button>
           </form>
 
-          {/* Summary */}
           {selectedCategory === "All" && (
             <>
               <p>
@@ -167,7 +190,6 @@ export default function Dashboard() {
             </>
           )}
 
-          {/* Filter Categories */}
           <div style={{ margin: "1rem 0" }}>
             <strong>Filter by Category:</strong>{" "}
             {categories.map((cat) => (
@@ -190,13 +212,28 @@ export default function Dashboard() {
             ))}
           </div>
 
-          {/* Expenses List */}
           <p>
             <strong>Total in {selectedCategory}:</strong> ₹
             {selectedCategory === "All" ? totalExpenses : filteredTotal}
           </p>
 
-          <ExpenseList expenses={filteredExpenses} />
+          <ExpenseList
+            expenses={filteredExpenses}
+            onDelete={handleDelete} // use the unified handler here
+            onEdit={(updated) => {
+              const updatedList = expenses.map((exp) =>
+                exp._id === updated._id ? updated : exp
+              );
+              setExpenses(updatedList);
+              setFilteredExpenses(
+                selectedCategory === "All"
+                  ? updatedList
+                  : updatedList.filter(
+                      (exp) => exp.category === selectedCategory
+                    )
+              );
+            }}
+          />
         </>
       )}
 

@@ -1,6 +1,4 @@
-// /api/expenses/edit/route.ts
-
-import { connectDB } from "@/lib/mongodb"; // Adjusted the import path
+import { connectDB } from "@/lib/mongodb";
 import { Expense } from "@/models/Expense";
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
