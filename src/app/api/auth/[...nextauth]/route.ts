@@ -1,9 +1,9 @@
-// src/app/api/auth/[...nextauth]/route.ts
 import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
-import bcrypt from "bcryptjs";
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -24,27 +24,38 @@ export const authOptions: AuthOptions = {
         );
         if (!isPasswordValid) throw new Error("Invalid password");
 
-        // Pass the user's id in the return object
         return { id: user._id.toString(), email: user.email, name: user.name };
       },
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
   ],
-  session: {
-    strategy: "jwt",
-  },
-  pages: {
-    signIn: "/login",
-  },
+  session: { strategy: "jwt" },
+  pages: { signIn: "/login" },
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id; // Attach id to JWT token
+    async jwt({ token, user, account }) {
+      await connectDB();
+
+      if (account?.provider === "google") {
+        let existingUser: any = await User.findOne({ email: token.email });
+        if (!existingUser) {
+          existingUser = await User.create({
+            name: token.name,
+            email: token.email,
+            password: null,
+          });
+        }
+        token.id = existingUser._id.toString();
       }
+
+      if (user) token.id = user.id;
       return token;
     },
     async session({ session, token }) {
       if (token && session.user) {
-        session.user.id = token.id as string; // Add id to session.user
+        session.user.id = token.id as string;
       }
       return session;
     },
@@ -53,5 +64,4 @@ export const authOptions: AuthOptions = {
 };
 
 const handler = NextAuth(authOptions);
-
 export { handler as GET, handler as POST };

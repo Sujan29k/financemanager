@@ -2,9 +2,9 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 
 // 1️⃣ Define the TypeScript interface for User
 export interface IUser extends Document {
-  name?: string;
+  name: string;
   email: string;
-  password: string;
+  password?: string | null;
   income?: number;
   createdAt: Date;
   updatedAt: Date;
@@ -13,10 +13,16 @@ export interface IUser extends Document {
 // 2️⃣ Create the schema
 const userSchema = new Schema<IUser>(
   {
-    email: { type: String, unique: true, required: true },
-    password: { type: String, required: true },
-    name: { type: String },
-    income: { type: Number, default: 0 }, // If you want income tracking
+    name: { type: String, required: true, default: "New User" }, // Or remove required if you prefer
+    email: {
+      type: String,
+      unique: true,
+      required: true,
+      lowercase: true,
+      trim: true,
+    },
+    password: { type: String, required: false },
+    income: { type: Number, default: 0 },
   },
   { timestamps: true }
 );
@@ -24,4 +30,5 @@ const userSchema = new Schema<IUser>(
 // 3️⃣ Export the model
 const User: Model<IUser> =
   mongoose.models.User || mongoose.model<IUser>("User", userSchema);
+
 export default User;

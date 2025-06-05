@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { signOut } from "next-auth/react";
 import ExpenseList from "@/components/ExpenseList";
+import Link from "next/link";
 
 interface Expense {
   _id: string;
@@ -14,31 +15,50 @@ interface Expense {
 export default function Dashboard() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [loading, setLoading] = useState(true);
   const [income, setIncome] = useState<number>(0);
-  const [incomeInput, setIncomeInput] = useState<string>("");
+  const [incomeInput, setIncomeInput] = useState("");
+  const [updatingIncome, setUpdatingIncome] = useState(false);
+
+  const categories = [
+    "All",
+    "Food",
+    "Transport",
+    "Shopping",
+    "Other",
+    "Entertainment",
+    "Bill",
+  ];
 
   useEffect(() => {
-    async function fetchData() {
+    const fetchData = async () => {
+      setLoading(true);
       try {
-        const expenseRes = await fetch("/api/expenses/view");
+        const [expenseRes, incomeRes] = await Promise.all([
+          fetch("/api/expenses/view"),
+          fetch("/api/income"),
+        ]);
+
         if (!expenseRes.ok) throw new Error("Failed to fetch expenses");
+        if (!incomeRes.ok) throw new Error("Failed to fetch income");
+
         const expenseData = await expenseRes.json();
         setExpenses(expenseData);
         setFilteredExpenses(expenseData);
 
-        const incomeRes = await fetch("/api/income");
-        if (!incomeRes.ok) throw new Error("Failed to fetch income");
         const incomeData = await incomeRes.json();
-        setIncome(incomeData.income || 0);
-        setIncomeInput((incomeData.income || 0).toString());
+        const userIncome = Number(incomeData.income) || 0;
+        setIncome(userIncome);
+        setIncomeInput(userIncome.toString());
       } catch (error) {
         console.error("Error fetching data:", error);
+        alert("Error fetching data");
       } finally {
         setLoading(false);
       }
-    }
+    };
+
     fetchData();
   }, []);
 
@@ -47,8 +67,7 @@ export default function Dashboard() {
     if (category === "All") {
       setFilteredExpenses(expenses);
     } else {
-      const filtered = expenses.filter((exp) => exp.category === category);
-      setFilteredExpenses(filtered);
+      setFilteredExpenses(expenses.filter((exp) => exp.category === category));
     }
   };
 
@@ -61,6 +80,7 @@ export default function Dashboard() {
     }
 
     try {
+      setUpdatingIncome(true);
       const res = await fetch("/api/income", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -73,7 +93,9 @@ export default function Dashboard() {
       alert("Income updated successfully!");
     } catch (error) {
       console.error("Error updating income:", error);
-      alert("There was an error updating your income");
+      alert("Error updating income");
+    } finally {
+      setUpdatingIncome(false);
     }
   };
 
@@ -84,19 +106,8 @@ export default function Dashboard() {
   );
   const remaining = income - totalExpenses;
 
-  const categories = [
-    "All",
-    "Food",
-    "Transport",
-    "Shopping",
-    "Other",
-    "Entertainment",
-    "Bill",
-  ];
-
   return (
     <div style={{ padding: "1rem" }}>
-      {/* Logout Button */}
       <button
         onClick={() => signOut({ callbackUrl: "/login" })}
         style={{
@@ -132,12 +143,16 @@ export default function Dashboard() {
               step="0.01"
               required
             />
-            <button type="submit" style={{ marginLeft: "0.5rem" }}>
-              Save Income
+            <button
+              type="submit"
+              style={{ marginLeft: "0.5rem" }}
+              disabled={updatingIncome}
+            >
+              {updatingIncome ? "Updating..." : "Save Income"}
             </button>
           </form>
 
-          {/* Summary (only for All) */}
+          {/* Summary */}
           {selectedCategory === "All" && (
             <>
               <p>
@@ -175,7 +190,7 @@ export default function Dashboard() {
             ))}
           </div>
 
-          {/* Expense List */}
+          {/* Expenses List */}
           <p>
             <strong>Total in {selectedCategory}:</strong> ₹
             {selectedCategory === "All" ? totalExpenses : filteredTotal}
@@ -184,6 +199,22 @@ export default function Dashboard() {
           <ExpenseList expenses={filteredExpenses} />
         </>
       )}
+
+      <Link href="/profile">
+        <button
+          style={{
+            marginBottom: "1rem",
+            padding: "0.5rem 1rem",
+            backgroundColor: "#2196f3",
+            color: "#fff",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+        >
+          View Profile
+        </button>
+      </Link>
     </div>
   );
 }

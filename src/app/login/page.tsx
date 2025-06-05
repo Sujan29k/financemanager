@@ -13,6 +13,7 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(""); // Reset error
 
     const result = await signIn("credentials", {
       redirect: false,
@@ -21,15 +22,20 @@ export default function LoginPage() {
     });
 
     if (result?.error) {
-      setError("Invalid email or password");
+      setError(result.error || "Invalid email or password");
     } else {
       router.push("/dashboard");
     }
   };
 
+  const handleGoogleLogin = async () => {
+    await signIn("google", { callbackUrl: "/dashboard" });
+  };
+
   return (
     <div className={styles.container}>
       <h2 className={styles.heading}>Login</h2>
+
       <form onSubmit={handleLogin} className={styles.form}>
         <input
           type="email"
@@ -47,11 +53,19 @@ export default function LoginPage() {
           required
           className={styles.input}
         />
+
         {error && <p className={styles.error}>{error}</p>}
+
         <button type="submit" className={styles.button}>
           Login
         </button>
       </form>
+
+      <div className={styles.divider}>or</div>
+
+      <button onClick={handleGoogleLogin} className={styles.googleButton}>
+        Sign in with Google
+      </button>
     </div>
   );
 }

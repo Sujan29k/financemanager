@@ -1,21 +1,23 @@
-// src/app/api/expense/add/route.ts
-
-import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { Expense } from "@/models/Expense";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session)
+export async function POST(req: NextRequest) {
+  const token = await getToken({ req });
+
+  if (!token || !token.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   try {
-    const { title, amount, category } = await req.json();
+    const { title, amount, category, date } = await req.json();
 
-    if (!title || !amount || !category) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    if (!title || !amount || !category || !date) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
     }
 
     await connectDB();
@@ -24,14 +26,18 @@ export async function POST(req: Request) {
       title,
       amount,
       category,
-      userId: session.user.id,
+      date: new Date(date), // convert to Date object
+      userId: token.id,
     });
 
     await newExpense.save();
 
     return NextResponse.json(newExpense, { status: 201 });
-  } catch (error) {
-    console.error("Error adding expense:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  } catch (error: any) {
+    console.error("Error adding expense:", error?.message);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }
