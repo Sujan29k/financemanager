@@ -40,4 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-.todo
+
+# This file is used to track TODOs in the codebase.
+*.todo
