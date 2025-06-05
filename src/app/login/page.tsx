@@ -64,7 +64,7 @@ export default function LoginPage() {
       <div className={styles.divider}>or</div>
 
       <button onClick={handleGoogleLogin} className={styles.googleButton}>
-        Sign in with Google
+        SIGN IN WITH GOOGLE
       </button>
     </div>
   );
