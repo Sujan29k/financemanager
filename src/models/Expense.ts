@@ -6,6 +6,7 @@ const ExpenseSchema = new Schema(
     amount: { type: Number, required: true },
     category: { type: String, required: true },
     userId: { type: String, required: true },
+    date: { type: Date, required: true }, // ✅ Add this line
   },
   { timestamps: true }
 );
