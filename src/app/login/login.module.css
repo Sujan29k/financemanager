@@ -1,15 +1,119 @@
-.container {
-  max-width: 400px;
-  margin: 0 auto;
+.loginWrapper {
+  display: flex;
+  min-height: 100vh;
+  background: #fef6f0;
+  font-family: "Inter", sans-serif;
+}
+
+.leftSection {
+  flex: 1;
+  background: #ffe5d9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+  border-top-left-radius: 1.5rem;
+  border-bottom-left-radius: 1.5rem;
+}
+
+.illustration {
+  max-width: 80%;
+  height: auto;
+  margin-bottom: 2rem;
+}
+
+.leftTitle {
+  font-size: 1.75rem;
+  color: #742a4d;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.leftSubtitle {
+  color: #6b4c4c;
+  font-size: 1rem;
+}
+
+.rightSection {
+  flex: 1;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 2rem;
-  border: 1px solid #ccc;
-  border-radius: 10px;
+  border-top-right-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.05);
+}
+
+.card {
+  width: 100%;
+  max-width: 400px;
+  background: #fff;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
   text-align: center;
 }
 
+.logo {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
 .heading {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.25rem;
+}
+
+.subheading {
+  font-size: 0.95rem;
+  color: #888;
   margin-bottom: 1.5rem;
+}
+
+.googleButton {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.divider {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin: 1.5rem 0;
+  position: relative;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  height: 1px;
+  width: 30%;
+  background-color: #ddd;
+  position: absolute;
+  top: 50%;
+}
+
+.divider::before {
+  left: 0;
+}
+
+.divider::after {
+  right: 0;
 }
 
 .form {
@@ -21,22 +125,32 @@
 .input {
   padding: 0.75rem;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 8px;
+  font-size: 0.95rem;
 }
 
-.button,
-.googleButton {
-  padding: 0.75rem;
-  border: none;
-  border-radius: 5px;
-  background-color: #0070f3;
-  color: white;
-  font-weight: bold;
+.options {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.link {
+  color: #742a4d;
+  font-weight: 500;
   cursor: pointer;
 }
 
-.googleButton {
-  background-color: #db4437;
+.loginButton {
+  background-color: #742a4d;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-weight: bold;
+  margin-top: 1rem;
+  cursor: pointer;
 }
 
 .error {
@@ -44,7 +158,7 @@
   margin-top: 0.5rem;
 }
 
-.divider {
-  margin: 1.5rem 0;
-  font-weight: bold;
+.footerText {
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
 }

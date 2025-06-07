@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import styles from "./login.module.css";
 
 export default function LoginPage() {
@@ -13,7 +14,7 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(""); // Reset error
+    setError("");
 
     const result = await signIn("credentials", {
       redirect: false,
@@ -33,39 +34,80 @@ export default function LoginPage() {
   };
 
   return (
-    <div className={styles.container}>
-      <h2 className={styles.heading}>Login</h2>
-
-      <form onSubmit={handleLogin} className={styles.form}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className={styles.input}
+    <div className={styles.loginWrapper}>
+      <div className={styles.leftSection}>
+        <Image
+          src="/login_logo-rebg.png" // Replace this with your own image
+          alt="Illustration"
+          width={500}
+          height={500}
+          className={styles.illustration}
         />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          className={styles.input}
-        />
+        <h2 className={styles.leftTitle}>Turn your ideas into reality.</h2>
+        <p className={styles.leftSubtitle}>
+          Start for free and get attractive offers from the community
+        </p>
+      </div>
 
-        {error && <p className={styles.error}>{error}</p>}
+      <div className={styles.rightSection}>
+        <div className={styles.card}>
+          <div className={styles.logo}>✳️</div>
+          <h2 className={styles.heading}>Login to your Account</h2>
+          <p className={styles.subheading}>
+            See what is going on with your finance
+          </p>
 
-        <button type="submit" className={styles.button}>
-          Login
-        </button>
-      </form>
+          <button className={styles.googleButton} onClick={handleGoogleLogin}>
+            <Image
+              src="/google_logo.png"
+              alt="Google logo"
+              width={20}
+              height={20}
+              className={styles.googleIcon}
+            />
+            Continue with Google
+          </button>
 
-      <div className={styles.divider}>or</div>
+          <div className={styles.divider}>or Sign in with Email</div>
 
-      <button onClick={handleGoogleLogin} className={styles.googleButton}>
-        SIGN IN WITH GOOGLE
-      </button>
+          <form onSubmit={handleLogin} className={styles.form}>
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className={styles.input}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className={styles.input}
+            />
+
+            <div className={styles.options}>
+              <label>
+                <input type="checkbox" /> Remember Me
+              </label>
+              <span className={styles.link}>Forgot Password?</span>
+            </div>
+
+            {error && <p className={styles.error}>{error}</p>}
+
+            <button type="submit" className={styles.loginButton}>
+              Login
+            </button>
+          </form>
+
+          <p className={styles.footerText}>
+            Not Registered Yet?{" "}
+            <span className={styles.link}>Create an account</span>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

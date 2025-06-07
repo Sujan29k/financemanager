@@ -1,26 +1,131 @@
 .container {
-    text-align: center;
-    padding: 3rem;
-    font-family: Arial, sans-serif;
-  }
-  
-  .links {
-    margin-top: 2rem;
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-  }
-  
-  .button {
-    background-color: #0070f3;
-    color: white;
-    padding: 0.8rem 1.5rem;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  
-  .button:hover {
-    background-color: #0059c1;
-  }
-  
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f7f9fb;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2rem 0;
+}
+
+.text {
+  flex: 1;
+  min-width: 300px;
+  margin-left: 4rem;
+}
+
+.title {
+  font-size: 3rem;
+  color: #1a237e;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: #37474f;
+  margin-bottom: 2rem;
+}
+
+.buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.buttonPrimary,
+.buttonSecondary {
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.buttonPrimary {
+  background-color: #1976d2;
+  color: white;
+}
+
+.buttonPrimary:hover {
+  background-color: #1565c0;
+  transform: translateY(-2px);
+}
+
+.buttonSecondary {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.buttonSecondary:hover {
+  background-color: #bbdefb;
+  transform: translateY(-2px);
+}
+
+.imageWrapper {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  justify-content: center;
+}
+
+.heroImage {
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  height: auto;
+}
+
+.features {
+  padding: 3rem 2rem;
+  background-color: #f9fafb;
+  text-align: center;
+}
+
+.featuresTitle {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #2d3748;
+}
+
+.cardsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 1rem;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+  scroll-snap-align: start;
+  text-align: left;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+  color: #2b6cb0;
+}
+
+.card p {
+  color: #4a5568;
+  font-size: 0.95rem;
+}
