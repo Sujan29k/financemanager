@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 
+import styles from "@/styles/ExpenseList.module.css";
+
 interface Expense {
   _id: string;
   title: string;
@@ -68,30 +70,54 @@ export default function ExpenseList({
   });
 
   return (
-    <div>
-      <div style={{ marginBottom: "1rem" }}>
-        <strong>Sort by:</strong>{" "}
-        <button onClick={() => setSortBy("date")}>Date</button>{" "}
-        <button onClick={() => setSortBy("amount")}>Amount</button>
+    <div className={styles.container}>
+      <div className={styles.sortControls}>
+        <strong className={styles.sortLabel}>Sort by:</strong>
+        <button
+          className={`${styles.sortButton} ${
+            sortBy === "date" ? styles.active : ""
+          }`}
+          onClick={() => setSortBy("date")}
+        >
+          Date
+        </button>
+        <button
+          className={`${styles.sortButton} ${
+            sortBy === "amount" ? styles.active : ""
+          }`}
+          onClick={() => setSortBy("amount")}
+        >
+          Amount
+        </button>
       </div>
-      <ul>
+
+      <ul className={styles.expenseList}>
+        {sortedExpenses.length === 0 && (
+          <li className={styles.emptyMessage}>No expenses found.</li>
+        )}
+
         {sortedExpenses.map((exp) =>
           editId === exp._id ? (
-            <li key={exp._id}>
+            <li key={exp._id} className={styles.expenseItem}>
               <input
+                className={styles.input}
+                placeholder="Title"
                 value={editData.title}
                 onChange={(e) =>
                   setEditData({ ...editData, title: e.target.value })
                 }
               />
               <input
+                className={styles.input}
                 type="number"
+                placeholder="Amount"
                 value={editData.amount}
                 onChange={(e) =>
                   setEditData({ ...editData, amount: e.target.value })
                 }
               />
               <select
+                className={styles.select}
                 value={editData.category}
                 onChange={(e) =>
                   setEditData({ ...editData, category: e.target.value })
@@ -110,20 +136,46 @@ export default function ExpenseList({
                   </option>
                 ))}
               </select>
-              <button onClick={handleEditSubmit}>
+              <button
+                className={styles.saveButton}
+                onClick={handleEditSubmit}
+                disabled={loadingId === exp._id}
+              >
                 {loadingId === exp._id ? "Saving..." : "Save"}
               </button>
-              <button onClick={() => setEditId(null)}>Cancel</button>
+              <button
+                className={styles.cancelButton}
+                onClick={() => setEditId(null)}
+              >
+                Cancel
+              </button>
             </li>
           ) : (
-            <li key={exp._id}>
-              {exp.title} - ₹{exp.amount} ({exp.category}){" "}
-              <button onClick={() => handleEditClick(exp)}>Edit</button>{" "}
-              <button
-                onClick={() => confirm("Are you sure?") && onDelete(exp._id)}
-              >
-                Delete
-              </button>
+            <li key={exp._id} className={styles.expenseItem}>
+              <div className={styles.expenseInfo}>
+                <span className={styles.title}>{exp.title}</span>
+                <span className={styles.category}>({exp.category})</span>
+              </div>
+              <div className={styles.amount}>₹{exp.amount.toFixed(2)}</div>
+              <div className={styles.actions}>
+                <button
+                  className={styles.editButton}
+                  onClick={() => handleEditClick(exp)}
+                  aria-label={`Edit expense ${exp.title}`}
+                >
+                  Edit
+                </button>
+                <button
+                  className={styles.deleteButton}
+                  onClick={() =>
+                    confirm("Are you sure you want to delete this expense?") &&
+                    onDelete(exp._id)
+                  }
+                  aria-label={`Delete expense ${exp.title}`}
+                >
+                  Delete
+                </button>
+              </div>
             </li>
           )
         )}

@@ -1,0 +1,67 @@
+.card {
+  flex: 1;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background-color: #1f2937; /* Dark slate background */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  color: #f9fafb;
+  font-size: 1rem;
+  text-align: center;
+  min-width: 160px;
+  margin: 0.75rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+}
+
+/* Colored soft overlays */
+.green::after,
+.red::after,
+.blue::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.08;
+  z-index: 0;
+}
+
+.green::after {
+  background-color: #22c55e; /* Emerald green */
+}
+
+.red::after {
+  background-color: #ef4444; /* Soft red */
+}
+
+.blue::after {
+  background-color: #3b82f6; /* Calmer blue */
+}
+
+.title,
+.value {
+  position: relative;
+  z-index: 1;
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #d1d5db;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #f3f4f6;
+}

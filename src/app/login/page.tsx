@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import styles from "./login.module.css";
+import Link from "next/link";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -104,7 +105,9 @@ export default function LoginPage() {
 
           <p className={styles.footerText}>
             Not Registered Yet?{" "}
-            <span className={styles.link}>Create an account</span>
+            <Link href="/register">
+              <span className={styles.link}>Create an account</span>
+            </Link>
           </p>
         </div>
       </div>

@@ -1,0 +1,148 @@
+.dashboardContainer {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+}
+
+.mainContent {
+  flex: 1;
+  padding: 2rem 3rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.statsCardsWrapper {
+  display: flex;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+/* Keep your existing styles from before, add or tweak these */
+
+.sortContainer {
+  margin: 1rem 0 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 600;
+  color: #333;
+  user-select: none;
+}
+
+.sortLabel {
+  font-size: 1.2rem;
+}
+
+.sortSelect {
+  padding: 0.4rem 0.8rem;
+  font-size: 1rem;
+  border-radius: 20px;
+  border: 1.5px solid #ccc;
+  cursor: pointer;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.07);
+  transition: border-color 0.3s ease;
+  outline-offset: 2px;
+}
+
+.sortSelect:hover,
+.sortSelect:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+  outline: none;
+}
+
+/* Expense List styling - tweak for nice look */
+.expenseListContainer {
+  margin-top: 1.5rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  background: white;
+}
+
+.expenseItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid #eee;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.expenseItem:last-child {
+  border-bottom: none;
+}
+
+.expenseInfo {
+  flex: 1;
+}
+
+.expenseTitle {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.expenseCategory {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 2px;
+  font-style: italic;
+}
+
+.expenseDate {
+  font-size: 0.85rem;
+  color: #999;
+  margin-left: 1rem;
+  white-space: nowrap;
+}
+
+.expenseAmount {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #e53935;
+  margin-right: 1.2rem;
+  white-space: nowrap;
+}
+
+.expenseActions {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.actionButton {
+  padding: 0.35rem 0.8rem;
+  font-size: 0.9rem;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+.editButton {
+  background-color: #1976d2;
+  color: white;
+}
+
+.editButton:hover,
+.editButton:focus {
+  background-color: #125ea9;
+  outline: none;
+}
+
+.deleteButton {
+  background-color: #e53935;
+  color: white;
+}
+
+.deleteButton:hover,
+.deleteButton:focus {
+  background-color: #ab2c29;
+  outline: none;
+}
