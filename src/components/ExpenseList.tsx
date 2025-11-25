@@ -55,6 +55,7 @@ export default function ExpenseList({
       onEdit(updated);
       setEditId(null);
     } catch (err) {
+      console.error(err);
       alert("Failed to update expense.");
     } finally {
       setLoadingId(null);

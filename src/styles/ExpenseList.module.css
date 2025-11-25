@@ -1,10 +1,10 @@
 .container {
-  max-width: 850px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background-color: #f9fafb; /* lighter background */
-  border-radius: 1.25rem;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  max-width: 100%;
+  margin: 2rem 0;
+  padding: 0;
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
   color: #1f2937;
   font-family: "Inter", sans-serif;
 }
@@ -67,17 +67,19 @@
 .expenseItem {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
-  padding: 1.25rem;
-  background-color: white;
-  border-radius: 1rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-  transition: transform 0.2s ease;
+  gap: 1.5rem;
+  padding: 1.75rem 2rem;
+  background: white;
+  border-radius: 16px;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(148, 163, 184, 0.1);
 }
 
 .expenseItem:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
 }
 
 .expenseInfo {

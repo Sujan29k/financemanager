@@ -1,12 +1,15 @@
-'use client';
-
 import ExpenseForm from "@/components/ExpenseForm";
 
 export default function AddExpensePage() {
   return (
-    <div>
-      <h2>Add Expense</h2>
+    <main
+      style={{
+        backgroundColor: "#f5f7fa",
+        minHeight: "100vh",
+        padding: "2rem",
+      }}
+    >
       <ExpenseForm />
-    </div>
+    </main>
   );
 }

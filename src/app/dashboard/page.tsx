@@ -8,6 +8,8 @@ import Link from "next/link";
 import IncomeInput from "@/components/IncomeInput";
 import CategoryFilter from "@/components/CategoryFilter";
 import StatsCard from "@/components/StatsCard";
+import StatsGraph from "@/components/StatsGraph";
+import CategoryPieChart from "@/components/CategoryPieChart";
 
 import styles from "./dashboard.module.css";
 
@@ -25,7 +27,7 @@ export default function Dashboard() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [loading, setLoading] = useState(true);
   const [income, setIncome] = useState<number>(0);
-  const [sortBy, setSortBy] = useState<"date" | "amount">("date");
+  const [sortBy] = useState<"date" | "amount">("date");
 
   const categories = [
     "All",
@@ -114,6 +116,13 @@ export default function Dashboard() {
       <Sidebar />
 
       <div className={styles.mainContent}>
+        <div className={styles.dashboardHeader}>
+          <h1 className={styles.dashboardTitle}>Dashboard</h1>
+          <Link href="/profile">
+            <button className={styles.viewProfileButton}>View Profile</button>
+          </Link>
+        </div>
+
         <Headere income={income} />
 
         {loading ? (
@@ -146,23 +155,6 @@ export default function Dashboard() {
               onCategoryChange={handleCategoryChange}
             />
 
-            <div className={styles.sortContainer}>
-              <label htmlFor="sort" className={styles.sortLabel}>
-                Sort by:
-              </label>
-              <select
-                id="sort"
-                className={styles.sortSelect}
-                value={sortBy}
-                onChange={(e) =>
-                  setSortBy(e.target.value === "date" ? "date" : "amount")
-                }
-              >
-                <option value="date">Date</option>
-                <option value="amount">Amount</option>
-              </select>
-            </div>
-
             <ExpenseList
               expenses={filteredExpenses}
               onDelete={handleDelete}
@@ -174,9 +166,14 @@ export default function Dashboard() {
               }}
             />
 
-            <Link href="/profile">
-              <button className={styles.profileButton}>View Profile</button>
-            </Link>
+            <div className={styles.chartContainer}>
+              <div className={styles.chartItem}>
+                <StatsGraph income={income} expenses={totalExpenses} />
+              </div>
+              <div className={styles.chartItem}>
+                <CategoryPieChart expenses={expenses} />
+              </div>
+            </div>
           </>
         )}
       </div>
